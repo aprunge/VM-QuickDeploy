@@ -30,4 +30,5 @@ VM-QuickDeploy has minimal dependencies (aside from virt-manager). The required 
 
  1. virt-install
  2. virt-viewer
+ 3. vnc
 

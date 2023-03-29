@@ -69,7 +69,7 @@ read -p "What is the name of your VM? " vm_name
 
 $(virt-install \
   --name $vm_name \
-  --ram $memory \
+  --ram $((memory * 1024)) \
   --disk path=/var/lib/libvirt/images/$vm_name.qcow2,size=20 \
   --vcpus $cores \
   --os-variant generic \

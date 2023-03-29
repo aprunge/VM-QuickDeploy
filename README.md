@@ -9,12 +9,24 @@ The <b>main</b> use cases of this script are:
  3. Scalability and customization
  
  VM-QuickDeploy is made with the <b>user</b> as the focus. Whether you operate at an enterprise level, or if you're setting up one or two virtual machines to learn more about virtualization, this is how it should be done.
+ 
+# Requirements
+The use of VM-QuickDeploy <b>REQUIRES</b> the installation of QEMU/KVM and the Virtual Machine Manager (VMM). The installation steps for those are below:
 
+ 1. Installing QEMU/KVM
+	 - To install QEMU/KVM, refactor the following command for your distro: ``virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat``
+2.  Activating and Launching QEMU/KVM:
+	- Running the following command <b>enables</b> the libvirt daemon: ``sudo systemctl enable libvirtd.service``
+	- This command <b>starts</b> the libvirt daemon: ``sudo systemctl start libvirtd.service``
+3. Editing libvirtd.conf <b>\*READ CAREFULLY\*</b>
+	- Using your favorite text editor, open /etc/libvirt/libvirtd.conf
+	- Jump to lines 80-90: ``unix_sock_group = "libvirt"``
+	- Jump to lines 100-110: ``unix_sock_rw_perms = "0770"``
+	- Then run the following: ``sudo usermod -a -G libvirt $(whoami) && newgrp libvirt``
+4. Run the following command to <b>restart</b> the libvirt daemon: ``sudo systemctl restart libvirtd.service``
 # Dependencies
-VM-QuickDeploy has minimal dependencies. The required packages are:
+VM-QuickDeploy has minimal dependencies (aside from virt-manager). The required packages are:
 
- 1. libvirt
- 2. qemu-kvm
- 3. virt-install
- 4. virt-viewer
+ 1. virt-install
+ 2. virt-viewer
 

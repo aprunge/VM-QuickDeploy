@@ -1,6 +1,6 @@
 
 # VM-QuickDeploy
-VM-QuickDeploy is a lightweight and fast virtual machine deployment script for QEMU/KVM Virtualization.
+VM-QuickDeploy is a lightweight and fast virtual machine deployment script for QEMU/KVM Virtualization. In fact, you <b>don't even *NEED* to have the ISOs locally!</b>
 
 The <b>main</b> use cases of this script are:
 
@@ -31,4 +31,3 @@ VM-QuickDeploy has minimal dependencies (aside from virt-manager). The required 
  1. virt-install
  2. virt-viewer
  3. vnc
-

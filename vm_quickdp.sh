@@ -8,8 +8,9 @@ cores=2
 # Define the help function
 function help() {
   echo
-  echo "Usage: script.sh -o [iso_directory] [OPTIONS]"
+  echo "Usage: script.sh [OPTIONS]"
   echo "Options:"
+  echo "  -o [ISO_DIRECTORY]    Directory to local ISO (only use if the ISO is a valid OS, otherwise DO NOT)"
   echo "  -m [MEMORY]           Amount of memory to use (default: 2GB)"
   echo "  -d [DRIVE SPACE]      Amount of drive space to use (default: 10GB)"
   echo "  -c [CORES]            Number of cores to use (default: 2)"

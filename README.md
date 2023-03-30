@@ -10,7 +10,7 @@ The <b>main</b> use cases of this script are:
  
  VM-QuickDeploy is made with the <b>user</b> as the focus. Whether you operate at an enterprise level, or if you're setting up one or two virtual machines to learn more about virtualization, this is how it should be done.
  # Usage
- VM-QuickDeploy is the easiest and fastest way to deploy a VM from your command line. All you need to do is run the following: ``./vm_quickdp -o /path/to/iso [OPTIONS]``. After that you'll be off to the races under your new hypervisor!
+ VM-QuickDeploy is the easiest and fastest way to deploy a VM from your command line. All you need to do is run the following: ``sudo ./vm_quickdp.sh [OPTIONS]``. After that you'll be off to the races under your new hypervisor!
 # Requirements
 The use of VM-QuickDeploy <b>REQUIRES</b> the installation of QEMU/KVM and the Virtual Machine Manager (VMM). The installation steps for those are below:
 

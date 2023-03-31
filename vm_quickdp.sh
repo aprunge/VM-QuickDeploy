@@ -73,7 +73,7 @@ case $num in
         ;;
     6)
         echo "You selected Arch."
-        iso_directory="http://mirror.rackspace.com/archlinux/iso/latest/archlinux-2022.02.01-x86_64.iso"
+        iso_directory="https://archive.archlinux.org/iso/2023.03.01/archlinux-2023.03.01-x86_64.iso"
         ;;
     7)
         echo "You selected openSUSE."

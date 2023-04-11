@@ -208,12 +208,5 @@ $(virt-install \
 
 read -p "Do you want to change the boot order? (y/n) " input 
 
-# Check if the input is "y" or "yes"
-if [[ "$input" =~ ^[Yy][Ee]?[Ss]?$ ]]; then
-  loading
-else
-  echo "Exiting..."
-fi
-
 clear
 exit 0

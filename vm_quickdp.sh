@@ -206,7 +206,5 @@ $(virt-install \
   --boot cdrom \
   --console pty,target_type=serial )
 
-read -p "Do you want to change the boot order? (y/n) " input 
-
 clear
 exit 0

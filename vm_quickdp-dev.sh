@@ -1,9 +1,33 @@
 #!/bin/bash
+#Set up signam trap to clear terminal if the script is killed
+trap "clear; exit 1" INT
 
 # Set default values in gb
 memory=2
 drive_space=20
 cores=2
+
+function loading() {
+  echo -n "Loading"
+  while true; do
+    # Print a period and wait for 0.2 seconds
+    echo -n "."
+    sleep 0.2
+
+    # Calculate the length of the loading message (including dots)
+    message_length=$(echo -n "Loading$dots" | wc -c)
+
+    # If the message is too long, wrap the dots to the next line
+    if [[ $message_length -gt 50 ]]; then
+      dots="\n"
+    else
+      dots="${dots}."
+    fi
+
+    # Update the loading message with the current dots and move the cursor back to the start
+    echo -ne "\rLoading$dots"
+  done
+}
 
 # Define the help function
 function help() {
@@ -15,8 +39,33 @@ function help() {
   echo "  -d [DRIVE SPACE]      Amount of drive space to use (default: 10GB)"
   echo "  -c [CORES]            Number of cores to use (default: 2)"
   echo "  -h, --help            Display this help message"
+  echo -e "  -C, --connect         Connect to the virtual machine through VNC (\033[1mNEEDS to have VNC installed\033[0m)"
   echo
 }
+
+function findvms() {
+  # find all qcow2 files and store their paths in an array
+  qcow2_files=($(find / -name "*.qcow2" -type f 2>/dev/null))
+
+  # print the array
+  echo -e "\033[1mList of qcow2 files:\033[0m"
+  for file in "${qcow2_files[@]}"; do
+    echo -e "\033[1m$file\033[0m"
+  done
+
+}
+
+function connect() {
+  echo "Connecting to $vm_name" 
+}
+
+# Check if script is run as root
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root. Aborting." 
+   exit 1
+fi
+
+clear
 
 # Parse the command line arguments
 while [[ "$#" -gt 0 ]]; do
@@ -25,12 +74,24 @@ while [[ "$#" -gt 0 ]]; do
     -m) memory="$2"; shift ;;
     -d) drive_space="$2"; shift ;;
     -c) cores="$2"; shift ;;
+    -C|--connect) vm_name="$2" connect; exit 0 ;;
     -h|--help) help; exit 0 ;;
     *) echo "Unknown parameter passed: $1" >&2
        exit 1 ;;
   esac
   shift
 done
+
+loading & 
+
+output=$(findvms)
+
+clear
+
+kill %1
+
+
+echo "$output"
 
 # Check if the ISO directory parameter is set
 if [[ -z "$iso_directory" ]]; then
@@ -62,6 +123,7 @@ case $num in
     3)
         echo "You selected Debian."
         iso_directory="https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.6.0-amd64-netinst.iso"
+        osvar="debian11"
         ;;
     4)
         echo "You selected Fedora."
@@ -86,6 +148,10 @@ case $num in
     9)
         echo "You selected Manjaro."
         iso_directory="https://download.manjaro.org/xfce/22.0.5/manjaro-xfce-22.0.5-230316-linux61.iso"
+        ;;
+    2018)
+        echo "You selected TempleOS"
+        iso_directory="https://templeos.org/Downloads/TempleOS.ISO"
         ;;
     *)
         echo "Invalid input. Please enter a number between 1 and 9."
@@ -134,8 +200,20 @@ $(virt-install \
   --ram $((memory * 1024)) \
   --disk path=/var/lib/libvirt/images/$vm_name.qcow2,size=20 \
   --vcpus $cores \
-  --os-variant generic \
+  --os-variant $osvar \
   --cdrom $iso_directory \
   --graphics vnc \
   --boot cdrom \
   --console pty,target_type=serial )
+
+read -p "Do you want to change the boot order? (y/n) " input 
+
+# Check if the input is "y" or "yes"
+if [[ "$input" =~ ^[Yy][Ee]?[Ss]?$ ]]; then
+  loading
+else
+  echo "Exiting..."
+fi
+
+clear
+exit 0

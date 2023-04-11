@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #Set up signam trap to clear terminal if the script is killed
 trap "clear; exit 1" INT
 
@@ -56,12 +57,12 @@ function findvms() {
 }
 
 function connect() {
-  echo "Connecting to $vm_name" 
+  $(virt-viewer -c qemu:///system $vm_name)
 }
 
 # Check if script is run as root
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root. Aborting." 
+   echo "This script must be run as root. Aborting."
    exit 1
 fi
 
@@ -82,7 +83,7 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-loading & 
+loading &
 
 output=$(findvms)
 
@@ -108,7 +109,7 @@ if [[ -z "$iso_directory" ]]; then
   echo "9. Manjaro"
   echo
   echo "Which OS would you like to use [1 - 9]: "
-  
+
   read num
 
 case $num in
@@ -175,7 +176,7 @@ echo
 
 # Print the selected options
 echo "Memory: $((memory * 1024)) MB"
-echo "Drive Space: $((drive_space * 1024)) MB"
+echo "Drive Space: $((drive_space 1024)) MB"
 echo "Cores: $cores"
 echo "ISO Directory: $iso_directory"
 echo
@@ -200,20 +201,8 @@ $(virt-install \
   --ram $((memory * 1024)) \
   --disk path=/var/lib/libvirt/images/$vm_name.qcow2,size=20 \
   --vcpus $cores \
-  --os-variant $osvar \
+  --os-variant "generic" \
   --cdrom $iso_directory \
   --graphics vnc \
   --boot cdrom \
   --console pty,target_type=serial )
-
-read -p "Do you want to change the boot order? (y/n) " input 
-
-# Check if the input is "y" or "yes"
-if [[ "$input" =~ ^[Yy][Ee]?[Ss]?$ ]]; then
-  loading
-else
-  echo "Exiting..."
-fi
-
-clear
-exit 0
